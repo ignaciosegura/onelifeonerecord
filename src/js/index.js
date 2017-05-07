@@ -4,18 +4,16 @@ require('../sass/index.scss'); // Required by Webpack to read SASS folder and ge
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Step from './step.js';
 
 class Index extends React.Component {
 
   render() {
-    return <h1>Hello, banana!</h1>
+    return <Step step="step1" />
   }
-
 }
 
-
 ReactDOM.render(
-  <Index></Index>,
-  document.getElementById('root')
+  <Index />,
+  document.getElementById('content')
 );
-
