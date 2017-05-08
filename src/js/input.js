@@ -3,25 +3,31 @@
 require('../sass/_input.scss');
 
 import React from 'react';
-import Fetcher from './fetcher.js';
+import Spotify from './spotify.js';
 
 class Input extends React.Component {
+  constructor(props) {
+    super(props);
+    this.requestData = this.requestData.bind(this);
+    this.processSearchResults = this.processSearchResults.bind(this);
+    this.Spotify = new Spotify();
+    this.state = {
+      items: []
+    }
+  }
   requestData(e) {
     if (e.target.value.length < 3) return;
-    let Fetch = new Fetcher();
     let searchString = e.target.value;
 
-    let query = {
-      type: 'artist',
-      q: searchString.toLowerCase()
-    };
-    Fetch
-      .get(Fetch.places.spotify + 'search')
-      .query(query)
-      .set('Accept', 'application/json')
-      .end(function (err, response) {
-        console.log('response');
-      })
+    this.Spotify.search('artist', searchString, this.processSearchResults);
+  }
+
+  processSearchResults(err, result) {
+    if (err !== null) return;
+
+    let artists = result.body.artists.items;
+    this.setState({ items: artists });
+    console.log(artists);
   }
 
   render() {

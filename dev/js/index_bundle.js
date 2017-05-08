@@ -9626,51 +9626,6 @@ exports.default = Button;
 "use strict";
 
 
-// This class makes all AJAX requests
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _superagentCache = __webpack_require__(195);
-
-var _superagentCache2 = _interopRequireDefault(_superagentCache);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Fetcher = function (_Superagent) {
-  _inherits(Fetcher, _Superagent);
-
-  function Fetcher() {
-    _classCallCheck(this, Fetcher);
-
-    var _this = _possibleConstructorReturn(this, (Fetcher.__proto__ || Object.getPrototypeOf(Fetcher)).call(this));
-
-    _this.places = {
-      spotify: 'https://api.spotify.com/v1/',
-      drupal: './d8/'
-    };
-    return _this;
-  }
-
-  return Fetcher;
-}(_superagentCache2.default);
-
-exports.default = Fetcher;
-
-/***/ }),
-/* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -9681,9 +9636,9 @@ var _react = __webpack_require__(25);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _fetcher = __webpack_require__(83);
+var _spotify = __webpack_require__(85);
 
-var _fetcher2 = _interopRequireDefault(_fetcher);
+var _spotify2 = _interopRequireDefault(_spotify);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9698,26 +9653,36 @@ __webpack_require__(90);
 var Input = function (_React$Component) {
   _inherits(Input, _React$Component);
 
-  function Input() {
+  function Input(props) {
     _classCallCheck(this, Input);
 
-    return _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
+
+    _this.requestData = _this.requestData.bind(_this);
+    _this.processSearchResults = _this.processSearchResults.bind(_this);
+    _this.Spotify = new _spotify2.default();
+    _this.state = {
+      items: []
+    };
+    return _this;
   }
 
   _createClass(Input, [{
     key: 'requestData',
     value: function requestData(e) {
       if (e.target.value.length < 3) return;
-      var Fetch = new _fetcher2.default();
       var searchString = e.target.value;
 
-      var query = {
-        type: 'artist',
-        q: searchString.toLowerCase()
-      };
-      Fetch.get(Fetch.places.spotify + 'search').query(query).set('Accept', 'application/json').end(function (err, response) {
-        console.log('response');
-      });
+      this.Spotify.search('artist', searchString, this.processSearchResults);
+    }
+  }, {
+    key: 'processSearchResults',
+    value: function processSearchResults(err, result) {
+      if (err !== null) return;
+
+      var artists = result.body.artists.items;
+      this.setState({ items: artists });
+      console.log(artists);
     }
   }, {
     key: 'render',
@@ -9741,7 +9706,7 @@ var Input = function (_React$Component) {
 exports.default = Input;
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9793,6 +9758,68 @@ var Question = function (_React$Component) {
 exports.default = Question;
 
 /***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// This class makes all AJAX requests
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _superagentCache = __webpack_require__(195);
+
+var _superagentCache2 = _interopRequireDefault(_superagentCache);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Spotify = function () {
+  function Spotify() {
+    _classCallCheck(this, Spotify);
+
+    this.Superagent = new _superagentCache2.default();
+    this.config = {
+      url: 'https://api.spotify.com/v1/',
+      key: './d8/'
+    };
+    this.search = this.search.bind(this);
+    this.delay = 1000;
+    this.request;
+  }
+
+  _createClass(Spotify, [{
+    key: 'search',
+    value: function search(target, query, callback) {
+      var _this = this;
+
+      var parameters = {
+        type: 'artist',
+        q: query.toLowerCase()
+      };
+      if (this.request) {
+        this.request.abort();
+      }
+      setTimeout(function () {
+        _this.request = _this.Superagent.get(_this.config.url + 'search').query(parameters).type('json').end(function (err, response) {
+          callback(err, response);
+        });
+      }, this.delay);
+    }
+  }]);
+
+  return Spotify;
+}();
+
+exports.default = Spotify;
+
+/***/ }),
 /* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9809,7 +9836,7 @@ var _react = __webpack_require__(25);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _question = __webpack_require__(85);
+var _question = __webpack_require__(84);
 
 var _question2 = _interopRequireDefault(_question);
 
@@ -9817,7 +9844,7 @@ var _button = __webpack_require__(82);
 
 var _button2 = _interopRequireDefault(_button);
 
-var _input = __webpack_require__(84);
+var _input = __webpack_require__(83);
 
 var _input2 = _interopRequireDefault(_input);
 
