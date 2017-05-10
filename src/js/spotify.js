@@ -11,8 +11,6 @@ class Spotify {
       key: './d8/'
     };
     this.search = this.search.bind(this);
-    this.delay = 1000;
-    this.request;
   }
 
   search(target, query, callback) {
@@ -20,18 +18,14 @@ class Spotify {
       type: 'artist',
       q: query.toLowerCase()
     };
-    if (this.request) {
-      this.request.abort();
-    }
-    setTimeout(() => {
-      this.request = this.Superagent
-        .get(this.config.url + 'search')
-        .query(parameters)
-        .type('json')
-        .end(function (err, response) {
-          callback(err, response);
-        })
-    }, this.delay);
+    this.request = this.Superagent
+      .get(this.config.url + 'search')
+      .query(parameters)
+      .type('json')
+      .timeout(5000, 10000)
+      .end(function (err, response) {
+        callback(err, response);
+      });
   }
 }
 

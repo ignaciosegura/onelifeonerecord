@@ -4,6 +4,7 @@ require('../sass/_input.scss');
 
 import React from 'react';
 import Spotify from './spotify.js';
+import DebounceInput from 'react-debounce-input';
 
 class Input extends React.Component {
   constructor(props) {
@@ -33,7 +34,13 @@ class Input extends React.Component {
   render() {
     return <div id="search-box">
       <label htmlFor="search-field">{this.props.label}</label>
-      <input type="text" id="search-field" className={this.props.className} data-search-for={this.props.searchFor} onChange={this.requestData} />
+      <DebounceInput
+        id="search-field"
+        className={this.props.className}
+        data-search-for={this.props.searchFor}
+        minLength={3}
+        debounceTimeout={600}
+        onChange={this.requestData} />
     </div>
   }
 }
