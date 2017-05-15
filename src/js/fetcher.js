@@ -1,5 +1,3 @@
-'use strict';
-
 // This class makes all AJAX requests
 import Superagent from 'superagent-cache';
 

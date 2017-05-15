@@ -1,5 +1,3 @@
-'use strict';
-
 // This class makes all AJAX requests
 import Superagent from 'superagent-cache';
 
@@ -16,7 +14,8 @@ class Spotify {
   search(target, query, callback) {
     let parameters = {
       type: 'artist',
-      q: query.toLowerCase()
+      q: query.toLowerCase(),
+      limit: 12
     };
     this.request = this.Superagent
       .get(this.config.url + 'search')

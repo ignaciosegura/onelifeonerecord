@@ -1,10 +1,9 @@
-'use strict';
-
 require('../sass/_input.scss');
 
 import React from 'react';
 import Spotify from './spotify.js';
 import DebounceInput from 'react-debounce-input';
+import Results from './results';
 
 class Input extends React.Component {
   constructor(props) {
@@ -41,6 +40,7 @@ class Input extends React.Component {
         minLength={3}
         debounceTimeout={600}
         onChange={this.requestData} />
+      <Results results={this.state.items} />
     </div>
   }
 }

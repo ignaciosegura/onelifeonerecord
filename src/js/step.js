@@ -1,5 +1,3 @@
-'use strict';
-
 require('../sass/_step.scss');
 
 import React from 'react';
