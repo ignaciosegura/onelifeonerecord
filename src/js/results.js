@@ -8,13 +8,12 @@ class Results extends React.Component {
     if (this.props.results.length === 0) return null;
 
     let RenderedResults = this.props.results.map(function (item) {
-      console.log(item.images.length);
       let resultImage = (item.images.length >= 2)
         ? item.images[1].url
         : '';
 
       return (
-        <li data-spotify-id={item.id} data-spotify-uri={item.uri}>
+        <li data-spotify-id={item.id} data-spotify-uri={item.uri} key={item.id} >
           <img src={resultImage} alt={item.name} />
           <h3>{item.name}</h3>
         </li>
@@ -22,7 +21,7 @@ class Results extends React.Component {
     });
 
     return (
-      <ul>
+      <ul className={this.props.type}>
         {RenderedResults}
       </ul>
     )

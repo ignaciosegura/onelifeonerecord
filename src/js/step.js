@@ -3,7 +3,7 @@ require('../sass/_step.scss');
 import React from 'react';
 import Question from './question.js';
 import Button from './button.js';
-import Input from './input.js';
+import SearchBox from './searchbox.js';
 
 class Step extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class Step extends React.Component {
     this.step1 = [
       <Question question="Banana?" key="step1-question" />,
       <Button text="I don't know" key="step1-button" />,
-      <Input className="artist" searchFor="artist" label="Easy, it was a record by" key="step1-input" />
+      <SearchBox className="artist" searchFor="artist" label="Easy, it was a record by" key="step1-input" />
     ];
   }
 
