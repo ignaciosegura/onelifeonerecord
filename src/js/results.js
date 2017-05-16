@@ -1,6 +1,6 @@
-require('../sass/_results.scss');
+require("../sass/_results.scss");
 
-import React from 'react';
+import React from "react";
 
 class Results extends React.Component {
 
@@ -10,7 +10,7 @@ class Results extends React.Component {
     let RenderedResults = this.props.results.map(function (item) {
       let resultImage = (item.images.length >= 2)
         ? item.images[1].url
-        : '';
+        : "";
 
       return (
         <li data-spotify-id={item.id} data-spotify-uri={item.uri} key={item.id} >

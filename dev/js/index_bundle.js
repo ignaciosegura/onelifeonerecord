@@ -9758,19 +9758,19 @@ var Results = function (_React$Component) {
   }
 
   _createClass(Results, [{
-    key: 'render',
+    key: "render",
     value: function render() {
       if (this.props.results.length === 0) return null;
 
       var RenderedResults = this.props.results.map(function (item) {
-        var resultImage = item.images.length >= 2 ? item.images[1].url : '';
+        var resultImage = item.images.length >= 2 ? item.images[1].url : "";
 
         return _react2.default.createElement(
-          'li',
-          { 'data-spotify-id': item.id, 'data-spotify-uri': item.uri, key: item.id },
-          _react2.default.createElement('img', { src: resultImage, alt: item.name }),
+          "li",
+          { "data-spotify-id": item.id, "data-spotify-uri": item.uri, key: item.id },
+          _react2.default.createElement("img", { src: resultImage, alt: item.name }),
           _react2.default.createElement(
-            'h3',
+            "h3",
             null,
             item.name
           )
@@ -9778,7 +9778,7 @@ var Results = function (_React$Component) {
       });
 
       return _react2.default.createElement(
-        'ul',
+        "ul",
         { className: this.props.type },
         RenderedResults
       );
