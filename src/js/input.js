@@ -16,10 +16,7 @@ class Input extends React.Component {
     }
   }
   requestData(e) {
-    if (e.target.value.length < 3) return;
-    let searchString = e.target.value;
-
-    this.Spotify.search('artist', searchString, this.processSearchResults);
+    this.Spotify.search('artist', e.target.value, this.processSearchResults);
   }
 
   processSearchResults(err, result) {
@@ -27,7 +24,6 @@ class Input extends React.Component {
 
     let artists = result.body.artists.items;
     this.setState({ items: artists });
-    console.log(artists);
   }
 
   render() {
